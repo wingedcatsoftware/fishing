@@ -41,6 +41,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ECS\ComponentRequirements.cs" />
     <Compile Include="ECS\Components\Component.cs" />
     <Compile Include="ECS\Components\LayerComponent.cs" />
     <Compile Include="ECS\Components\PositionComponent.cs" />

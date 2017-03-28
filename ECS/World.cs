@@ -1,42 +1,59 @@
 ﻿
 namespace HarpoonFishing.Ecs
 {
-    using System;
     using System.Collections.Generic;
     using Components;
     using ECS.Systems;
     using Microsoft.Xna.Framework;
+    using System;
 
     class World
     {
         public World()
         {
-            _systems = new List<System>();
-            _componentTypeToComponentInstanceMap = new Dictionary<Type, Dictionary<EntityId, Component>>();
+            _systems = new List<Tuple<System, ComponentRequirements>>();
+            _entities = new Dictionary<EntityId, List<Component>>();
         }
 
-        public void Update(GameTime gameTime)
+        // Note: Order of system registration matters.  Systems are Updated in the 
+        //   order they are registered.
+        public void RegisterSystem(System system, ComponentRequirements requirements)
         {
-            foreach (System system in _systems)
-            {
-                system.Update(gameTime);
-            }
+            _systems.Add(Tuple.Create(system, requirements));
         }
 
-        public T GetComponent<T>(EntityId entityId) where T : Component
+        public void AddEntity(EntityId id, List<Component> data)
         {
-            if (_componentTypeToComponentInstanceMap.TryGetValue(typeof(T), out Dictionary<EntityId, Component> componentInstanceMap))
+            _entities.Add(id, data);
+        }
+
+        public T GetComponent<T>(EntityId id) where T : Component
+        {
+            if (_entities.TryGetValue(id, out List<Component> components))
             {
-                if (componentInstanceMap.TryGetValue(entityId, out Component component))
+                foreach (Component component in components)
                 {
-                    return (T)component;
+                    var result = component as T;
+                    if (result != null)
+                    {
+                        return result;
+                    }
                 }
             }
 
             return null;
         }
 
-        private List<System> _systems;
-        private Dictionary<Type, Dictionary<EntityId, Component>> _componentTypeToComponentInstanceMap;
+        public void Update(GameTime gameTime)
+        {
+            foreach (var systemAndRequirements in _systems)
+            {
+                var system = systemAndRequirements.Item1;
+                system.Update(gameTime);
+            }
+        }
+
+        private List<Tuple<System, ComponentRequirements>> _systems;
+        private Dictionary<EntityId, List<Component>> _entities;
     }
 }
