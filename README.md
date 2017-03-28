@@ -1,2 +1,2 @@
 # fishing
-An experiment in Unity3d and fish acquisition.
+An experiment in MonoGame and fish acquisition.
