@@ -1,5 +1,5 @@
 ﻿
-namespace HarpoonFishing.ECS.Components
+namespace HarpoonFishing.Ecs.Components
 {
     class LayerComponent
     {

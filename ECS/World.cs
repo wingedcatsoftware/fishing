@@ -1,37 +1,60 @@
 ﻿
 namespace HarpoonFishing.Ecs
 {
-    using System.Collections.Generic;
-    using Components;
-    using ECS.Systems;
+    using HarpoonFishing.Ecs.Components;
+    using HarpoonFishing.Ecs.Systems;
     using Microsoft.Xna.Framework;
-    using System;
 
-    class World
+    using SystemList = System.Collections.Generic.List<Systems.System>;
+    using EntityMap = System.Collections.Generic.Dictionary<EntityId, Entity>;
+    using SystemMap = System.Collections.Generic.Dictionary<UpdatePhase, System.Collections.Generic.List<Systems.System>>;
+
+
+    partial class World
     {
         public World()
         {
-            _systems = new List<Tuple<System, ComponentRequirements>>();
-            _entities = new Dictionary<EntityId, List<Component>>();
+            _systems = new SystemMap();
+            _entities = new EntityMap();
         }
 
         // Note: Order of system registration matters.  Systems are Updated in the 
         //   order they are registered.
-        public void RegisterSystem(System system, ComponentRequirements requirements)
+        public void RegisterSystem(System system)
         {
-            _systems.Add(Tuple.Create(system, requirements));
+            SystemList phaseSystems;
+
+            if (!_systems.TryGetValue(system.UpdatePhase, out phaseSystems))
+            {
+                phaseSystems = new SystemList();
+                _systems.Add(system.UpdatePhase, phaseSystems);
+            }
+
+            phaseSystems.Add(system);
         }
 
-        public void AddEntity(EntityId id, List<Component> data)
+        public void ProcessPhase(GameTime gameTime, UpdatePhase phase)
         {
-            _entities.Add(id, data);
+            if (_systems.TryGetValue(phase, out SystemList phaseSystems))
+            {
+                foreach (System system in phaseSystems)
+                {
+                    EntitySet relevantEntities = new EntitySet(this, system.ComponentRequirements);
+                    system.Update(gameTime, relevantEntities);
+                }
+            }
+        }
+
+        public void AddEntity(Entity entity)
+        {
+            _entities.Add(entity.Id, entity);
         }
 
         public T GetComponent<T>(EntityId id) where T : Component
         {
-            if (_entities.TryGetValue(id, out List<Component> components))
+            if (_entities.TryGetValue(id, out Entity entity))
             {
-                foreach (Component component in components)
+                foreach (Component component in entity.Components)
                 {
                     var result = component as T;
                     if (result != null)
@@ -44,16 +67,19 @@ namespace HarpoonFishing.Ecs
             return null;
         }
 
-        public void Update(GameTime gameTime)
+        public Entity GetEntity(EntityId id)
         {
-            foreach (var systemAndRequirements in _systems)
+            Entity result;
+
+            if (!_entities.TryGetValue(id, out result))
             {
-                var system = systemAndRequirements.Item1;
-                system.Update(gameTime);
+                result = null;
             }
+
+            return result;
         }
 
-        private List<Tuple<System, ComponentRequirements>> _systems;
-        private Dictionary<EntityId, List<Component>> _entities;
+        private SystemMap _systems;
+        private EntityMap _entities;
     }
 }

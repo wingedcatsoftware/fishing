@@ -4,6 +4,12 @@ namespace HarpoonFishing.Ecs
     using System;
     using System.Threading;
 
+    enum UpdatePhase
+    {
+        Main,
+        Render,
+    }
+
     struct EntityId
     {
         public static EntityId NewId()

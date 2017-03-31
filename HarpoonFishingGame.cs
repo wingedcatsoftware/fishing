@@ -62,7 +62,7 @@ namespace HarpoonFishing
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            _world.Update(gameTime);
+            _world.ProcessPhase(gameTime, UpdatePhase.Main);
 
             base.Update(gameTime);
         }
@@ -75,7 +75,7 @@ namespace HarpoonFishing
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
+            _world.ProcessPhase(gameTime, UpdatePhase.Render);
 
             base.Draw(gameTime);
         }

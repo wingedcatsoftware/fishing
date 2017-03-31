@@ -45,6 +45,8 @@
     <Compile Include="ECS\Components\Component.cs" />
     <Compile Include="ECS\Components\LayerComponent.cs" />
     <Compile Include="ECS\Components\PositionComponent.cs" />
+    <Compile Include="ECS\Entity.cs" />
+    <Compile Include="ECS\EntitySet.cs" />
     <Compile Include="ECS\Systems\System.cs" />
     <Compile Include="ECS\Types.cs" />
     <Compile Include="ECS\World.cs" />
