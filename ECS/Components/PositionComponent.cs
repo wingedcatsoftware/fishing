@@ -1,11 +1,14 @@
-﻿using System;
-
+﻿
 namespace HarpoonFishing.Ecs.Components
 {
-    class PositionComponent
-    {
-        public double X { get; set; }
+    using Microsoft.Xna.Framework;
 
-        public double Y { get; set; }
+    class PositionComponent : Component
+    {
+        public PositionComponent(World world, EntityId id) : base(world, id)
+        {
+        }
+
+        public Vector2 Position { get; set; }
     }
 }

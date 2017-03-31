@@ -1,0 +1,5 @@
+﻿
+
+Ensure only the components are relevant to a system are passed to it
+Move component requirements defintition for sprite render system to its ctor
+

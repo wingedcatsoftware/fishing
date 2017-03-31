@@ -1,10 +1,14 @@
 ﻿
 namespace HarpoonFishing
 {
-    using Ecs;
+    using HarpoonFishing.Ecs;
+    using HarpoonFishing.Ecs.Systems;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
+    using HarpoonFishing.Ecs.Components;
+
+    using ComponentList = System.Collections.Generic.List<Ecs.Components.Component>;
 
     /// <summary>
     /// This is the main type for your game.
@@ -26,7 +30,13 @@ namespace HarpoonFishing
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            ComponentRequirements requirements = new ComponentRequirements();
+            requirements.ReadOnlyComponents.Add(typeof(PositionComponent));
+            requirements.ReadOnlyComponents.Add(typeof(SpriteComponent));
+            var spriteRenderSystem = new SpriteRenderSystem(requirements, _graphics, _spriteBatch);
+            _world.RegisterSystem(spriteRenderSystem);
 
             base.Initialize();
         }
@@ -37,10 +47,20 @@ namespace HarpoonFishing
         /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            _orangeFishTexture = Content.Load<Texture2D>("orange-fish");
 
-            // TODO: use this.Content to load your game content here
+            // TEMP create a test entity
+            EntityId id = EntityId.NewId();
+            var positionComponent = new PositionComponent(_world, id);
+            positionComponent.Position = new Vector2(50.0f, 50.0f);
+            var spriteComponent = new SpriteComponent(_world, id);
+            spriteComponent.Texture = _orangeFishTexture;
+            ComponentList components = new ComponentList();
+            components.Add(positionComponent);
+            components.Add(spriteComponent);
+            Entity orangeFish = new Entity(id, components);
+
+            _world.AddEntity(orangeFish);
         }
 
         /// <summary>
@@ -73,13 +93,12 @@ namespace HarpoonFishing
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
             _world.ProcessPhase(gameTime, UpdatePhase.Render);
 
             base.Draw(gameTime);
         }
 
+        private Texture2D _orangeFishTexture;
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private World _world;
