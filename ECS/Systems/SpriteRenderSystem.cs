@@ -25,9 +25,18 @@ namespace HarpoonFishing.Ecs.Systems
             foreach (Entity entity in relevantEntites)
             {
                 SpriteComponent spriteComponent = entity.GetComponent<SpriteComponent>();
-                PositionComponent positionComponent = entity.GetComponent<PositionComponent>();
+                TransformComponent positionComponent = entity.GetComponent<TransformComponent>();
 
-                _spriteBatch.Draw(spriteComponent.Texture, positionComponent.Position, Color.White);
+                _spriteBatch.Draw(
+                    texture : spriteComponent.Texture, 
+                    position : positionComponent.Position, 
+                    sourceRectangle : null,
+                    color : Color.White,
+                    rotation : positionComponent.Rotation,
+                    origin : new Vector2(0.0f, 0.0f),
+                    scale : positionComponent.Scale,
+                    effects : SpriteEffects.None,
+                    layerDepth : 0.0f);
             }
 
             _spriteBatch.End();

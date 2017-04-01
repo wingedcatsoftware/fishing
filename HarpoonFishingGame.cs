@@ -33,7 +33,7 @@ namespace HarpoonFishing
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             ComponentRequirements requirements = new ComponentRequirements();
-            requirements.ReadOnlyComponents.Add(typeof(PositionComponent));
+            requirements.ReadOnlyComponents.Add(typeof(TransformComponent));
             requirements.ReadOnlyComponents.Add(typeof(SpriteComponent));
             var spriteRenderSystem = new SpriteRenderSystem(requirements, _graphics, _spriteBatch);
             _world.RegisterSystem(spriteRenderSystem);
@@ -51,12 +51,13 @@ namespace HarpoonFishing
 
             // TEMP create a test entity
             EntityId id = EntityId.NewId();
-            var positionComponent = new PositionComponent(_world, id);
-            positionComponent.Position = new Vector2(50.0f, 50.0f);
+            var transformComponent = new TransformComponent(_world, id);
+            transformComponent.Position = new Vector2(50.0f, 50.0f);
+            transformComponent.Scale = new Vector2(0.25f, 0.25f);
             var spriteComponent = new SpriteComponent(_world, id);
             spriteComponent.Texture = _orangeFishTexture;
             ComponentList components = new ComponentList();
-            components.Add(positionComponent);
+            components.Add(transformComponent);
             components.Add(spriteComponent);
             Entity orangeFish = new Entity(id, components);
 

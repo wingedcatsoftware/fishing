@@ -44,7 +44,7 @@
     <Compile Include="ECS\ComponentRequirements.cs" />
     <Compile Include="ECS\Components\Component.cs" />
     <Compile Include="ECS\Components\LayerComponent.cs" />
-    <Compile Include="ECS\Components\PositionComponent.cs" />
+    <Compile Include="ECS\Components\TransformComponent.cs" />
     <Compile Include="ECS\Components\SpriteComponent.cs" />
     <Compile Include="ECS\Entity.cs" />
     <Compile Include="ECS\EntitySet.cs" />
