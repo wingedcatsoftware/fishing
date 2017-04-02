@@ -8,33 +8,32 @@ namespace HarpoonFishing.Ecs.Systems
 
     class SpriteRenderSystem : System
     {
-        public SpriteRenderSystem(ComponentRequirements componentRequirements, GraphicsDeviceManager graphics, SpriteBatch spriteBatch) :
-            base(UpdatePhase.Render, componentRequirements)
+        public SpriteRenderSystem(World world, GraphicsDeviceManager graphics, SpriteBatch spriteBatch) :
+            base(UpdatePhase.Render)
         {
             _graphics = graphics;
             _spriteBatch = spriteBatch;
+
+            _entityEnumerator = world.RegisterSystem2<TransformComponent, SpriteComponent>(this);
         }
 
-        public override void Update(GameTime gameTime, IEnumerable<Entity> relevantEntites)
+        public override void Update(GameTime gameTime)
         {
             _graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // Draw the sprite.
             _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
 
-            foreach (Entity entity in relevantEntites)
+            foreach ((TransformComponent transformComponent, SpriteComponent spriteComponent) in _entityEnumerator)
             {
-                SpriteComponent spriteComponent = entity.GetComponent<SpriteComponent>();
-                TransformComponent positionComponent = entity.GetComponent<TransformComponent>();
-
                 _spriteBatch.Draw(
                     texture : spriteComponent.Texture, 
-                    position : positionComponent.Position, 
+                    position : transformComponent.Position, 
                     sourceRectangle : null,
                     color : Color.White,
-                    rotation : positionComponent.Rotation,
+                    rotation : transformComponent.Rotation,
                     origin : new Vector2(0.0f, 0.0f),
-                    scale : positionComponent.Scale,
+                    scale : transformComponent.Scale,
                     effects : SpriteEffects.None,
                     layerDepth : 0.0f);
             }
@@ -42,6 +41,7 @@ namespace HarpoonFishing.Ecs.Systems
             _spriteBatch.End();
         }
 
+        private IEnumerable<(TransformComponent, SpriteComponent)> _entityEnumerator;
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
     }

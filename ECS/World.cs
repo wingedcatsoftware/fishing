@@ -1,26 +1,29 @@
 ﻿
 namespace HarpoonFishing.Ecs
 {
+    using System;
+    using System.Collections.Generic;
     using HarpoonFishing.Ecs.Components;
     using HarpoonFishing.Ecs.Systems;
     using Microsoft.Xna.Framework;
 
+    using ComponentList = System.Collections.Generic.List<Components.Component>;
+    using ComponentMap = System.Collections.Generic.Dictionary<EntityId, Components.Component>;
+    using ComponentTypeToMap = System.Collections.Generic.Dictionary<System.Type, System.Collections.Generic.Dictionary<EntityId, Components.Component>>;
     using SystemList = System.Collections.Generic.List<Systems.System>;
-    using EntityMap = System.Collections.Generic.Dictionary<EntityId, Entity>;
     using SystemMap = System.Collections.Generic.Dictionary<UpdatePhase, System.Collections.Generic.List<Systems.System>>;
-
 
     partial class World
     {
         public World()
         {
             _systems = new SystemMap();
-            _entities = new EntityMap();
+            _components = new ComponentTypeToMap();
         }
 
         // Note: Order of system registration matters.  Systems are Updated in the 
         //   order they are registered.
-        public void RegisterSystem(System system)
+        public IEnumerable<(T, U)> RegisterSystem2<T, U>(System system) where T : Component where U : Component
         {
             SystemList phaseSystems;
 
@@ -31,6 +34,8 @@ namespace HarpoonFishing.Ecs
             }
 
             phaseSystems.Add(system);
+
+            return new ComponentEnuumerator2<T, U>(this);
         }
 
         public void ProcessPhase(GameTime gameTime, UpdatePhase phase)
@@ -39,47 +44,53 @@ namespace HarpoonFishing.Ecs
             {
                 foreach (System system in phaseSystems)
                 {
-                    EntitySet relevantEntities = new EntitySet(this, system.ComponentRequirements);
-                    system.Update(gameTime, relevantEntities);
+                    system.Update(gameTime);
                 }
             }
         }
 
-        public void AddEntity(Entity entity)
+        public void AddEntity(EntityId id, ComponentList components)
         {
-            _entities.Add(entity.Id, entity);
+            foreach (Component component in components)
+            {
+                Type componentType = component.GetType();
+                ComponentMap componentMap = null;
+
+                if (!_components.TryGetValue(componentType, out componentMap))
+                {
+                    componentMap = new ComponentMap();
+                    _components[componentType] = componentMap;
+                }
+
+                componentMap.Add(id, component);
+            }
         }
 
         public T GetComponent<T>(EntityId id) where T : Component
         {
-            if (_entities.TryGetValue(id, out Entity entity))
+            if (_components.TryGetValue(typeof(T), out ComponentMap componentMap))
             {
-                foreach (Component component in entity.Components)
+                if (componentMap.TryGetValue(id, out Component component))
                 {
-                    var result = component as T;
-                    if (result != null)
-                    {
-                        return result;
-                    }
+                    return (T)component;
                 }
             }
 
             return null;
         }
 
-        public Entity GetEntity(EntityId id)
+        public IEnumerable<(EntityId, T)> GetComponentEnumerator<T>() where T : Component 
         {
-            Entity result;
-
-            if (!_entities.TryGetValue(id, out result))
+            if (_components.TryGetValue(typeof(T), out ComponentMap componentMap))
             {
-                result = null;
+                foreach (var item in componentMap)
+                {
+                    yield return (item.Key, (T)item.Value);
+                }
             }
-
-            return result;
         }
 
         private SystemMap _systems;
-        private EntityMap _entities;
+        private ComponentTypeToMap _components;
     }
 }

@@ -32,11 +32,8 @@ namespace HarpoonFishing
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            ComponentRequirements requirements = new ComponentRequirements();
-            requirements.ReadOnlyComponents.Add(typeof(TransformComponent));
-            requirements.ReadOnlyComponents.Add(typeof(SpriteComponent));
-            var spriteRenderSystem = new SpriteRenderSystem(requirements, _graphics, _spriteBatch);
-            _world.RegisterSystem(spriteRenderSystem);
+            // Systems register themselves with the world, so no need to hang on to them.
+            new SpriteRenderSystem(_world, _graphics, _spriteBatch);
 
             base.Initialize();
         }
@@ -59,9 +56,8 @@ namespace HarpoonFishing
             ComponentList components = new ComponentList();
             components.Add(transformComponent);
             components.Add(spriteComponent);
-            Entity orangeFish = new Entity(id, components);
 
-            _world.AddEntity(orangeFish);
+            _world.AddEntity(id, components);
         }
 
         /// <summary>
