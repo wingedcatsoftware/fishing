@@ -24,6 +24,7 @@ namespace HarpoonFishing.Ecs
     {
         public World()
         {
+            _deferredCreationQueue = new Queue<(EntityId, ComponentList)>();
             _systems = new SystemMap();
             _components = new ComponentTypeToMap();
         }
@@ -60,32 +61,21 @@ namespace HarpoonFishing.Ecs
             return new ComponentEnumerator5<T, U, V, W, X>(this);
         }
 
-        public void ProcessPhase(GameTime gameTime, UpdatePhase phase)
+        public void Update(GameTime gameTime)
         {
-            if (_systems.TryGetValue(phase, out SystemRegistrationList phaseSystemRegistrations))
-            {
-                foreach (SystemRegistration registration in phaseSystemRegistrations)
-                {
-                    registration.System.Update(gameTime);
-                }
-            }
+            AddDeferredEntities();
+
+            ProcessPhase(gameTime, UpdatePhase.Main);
+        }
+
+        public void Render(GameTime gameTime)
+        {
+            ProcessPhase(gameTime, UpdatePhase.Render);
         }
 
         public void AddEntity(EntityId id, ComponentList components)
         {
-            foreach (Component component in components)
-            {
-                Type componentType = component.GetType();
-                ComponentMap componentMap = null;
-
-                if (!_components.TryGetValue(componentType, out componentMap))
-                {
-                    componentMap = new ComponentMap();
-                    _components[componentType] = componentMap;
-                }
-
-                componentMap.Add(id, component);
-            }
+            _deferredCreationQueue.Enqueue((id, components));
         }
 
         public T GetComponent<T>(EntityId id) where T : Component
@@ -112,6 +102,17 @@ namespace HarpoonFishing.Ecs
             }
         }
 
+        private void ProcessPhase(GameTime gameTime, UpdatePhase phase)
+        {
+            if (_systems.TryGetValue(phase, out SystemRegistrationList phaseSystemRegistrations))
+            {
+                foreach (SystemRegistration registration in phaseSystemRegistrations)
+                {
+                    registration.System.Update(gameTime);
+                }
+            }
+        }
+
         private void RegisterSystemInternal(System system, params (Type, ComponentUse)[] args)
         {
             SystemRegistration systemRegistration = new SystemRegistration();
@@ -132,6 +133,29 @@ namespace HarpoonFishing.Ecs
             phaseSystems.Add(systemRegistration);
         }
 
+        private void AddDeferredEntities()
+        {
+            while (_deferredCreationQueue.Count > 0)
+            {
+                (EntityId id, ComponentList components) = _deferredCreationQueue.Dequeue();
+
+                foreach (Component component in components)
+                {
+                    Type componentType = component.GetType();
+                    ComponentMap componentMap = null;
+
+                    if (!_components.TryGetValue(componentType, out componentMap))
+                    {
+                        componentMap = new ComponentMap();
+                        _components[componentType] = componentMap;
+                    }
+
+                    componentMap.Add(id, component);
+                }
+            }
+        }
+
+        private Queue<(EntityId, ComponentList)> _deferredCreationQueue;
         private SystemMap _systems;
         private ComponentTypeToMap _components;
     }

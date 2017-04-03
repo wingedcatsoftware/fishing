@@ -19,8 +19,10 @@ namespace HarpoonFishing
         public HarpoonFishingGame()
         {
             _graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
             _world = new World();
+
+            Content.RootDirectory = "Content";
+            _textureSource = new TextureSource(Content);
         }
 
         /// <summary>
@@ -36,6 +38,7 @@ namespace HarpoonFishing
             // Systems register themselves with the world, so no need to hang on to them.
             new SpriteRenderSystem(_world, _graphics, _spriteBatch);
             new FlipBookAnimationSystem(_world);
+            new FishPopulationSystem(_world, _textureSource);
 
             base.Initialize();
         }
@@ -46,29 +49,13 @@ namespace HarpoonFishing
         /// </summary>
         protected override void LoadContent()
         {
-            Texture2D greenFishTexture = Content.Load<Texture2D>("green-fish-rest-to-right-sheet");
+            _textureSource.Load("green-fish-rest-to-right-sheet");
 
-            // TEMP create a test entity
+            // Don't create the demographics until all the assets are loaded as that will start fish spawning.
             EntityId id = EntityId.NewId();
-            var transformComponent = new TransformComponent(_world, id);
-            transformComponent.Position = new Vector2(50.0f, 50.0f);
-            transformComponent.Scale = new Vector2(0.25f, 0.25f);
-
-            var spriteComponent = new SpriteComponent(_world, id);
-            spriteComponent.Texture = greenFishTexture;
-            spriteComponent.Size = new Point(256, 256);
-            spriteComponent.SheetSize = new Point(1536, 256);
-            spriteComponent.PositionInSheet = new Point(1, 0);
-
-            var flipBookAnimationComponent = new FlipBookAnimationComponent(_world, id);
-            flipBookAnimationComponent.AnimationFrameTime = TimeSpan.FromMilliseconds(100);
-
-            ComponentList components = new ComponentList();
-            components.Add(transformComponent);
-            components.Add(spriteComponent);
-            components.Add(flipBookAnimationComponent);
-
-            _world.AddEntity(id, components);
+            var fishDemographicsComponent = new FishDemographicsComponent(_world, id);
+            fishDemographicsComponent.PopulationMax = 10;
+            _world.AddEntity(id, new ComponentList() { fishDemographicsComponent });
         }
 
         /// <summary>
@@ -90,7 +77,7 @@ namespace HarpoonFishing
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            _world.ProcessPhase(gameTime, UpdatePhase.Main);
+            _world.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -101,7 +88,7 @@ namespace HarpoonFishing
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            _world.ProcessPhase(gameTime, UpdatePhase.Render);
+            _world.Render(gameTime);
 
             base.Draw(gameTime);
         }
@@ -109,5 +96,6 @@ namespace HarpoonFishing
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private World _world;
+        private TextureSource _textureSource;
     }
 }

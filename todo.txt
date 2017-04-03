@@ -1,4 +1,7 @@
 ﻿
+Implement proper communication of screen size to systems (consider indirection through logical space)
+Correctly handle registration for separate iterators for disparate entity sets (e.g. fish Demographics on world entity, fish description on fish themselves)
+Introduce SwimSystem
 Decide how to handle changing sprite sheet when fish is moving
 
 Factor out static data so it isn't copied to every entity instance (e.g. sprite sheet dimention info)

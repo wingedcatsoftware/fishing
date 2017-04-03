@@ -7,6 +7,6 @@ namespace HarpoonFishing.Ecs.Components
         {
         }
 
-        int Layer { get; set;  }
+        public int Layer { get; set;  }
     }
 }

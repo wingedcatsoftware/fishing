@@ -42,6 +42,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ECS\Components\Component.cs" />
+    <Compile Include="ECS\Components\FishDemographicDescriptionComponent.cs" />
+    <Compile Include="ECS\Components\FishDemographicsComponent.cs" />
     <Compile Include="ECS\Components\FlipBookAnimationComponent.cs" />
     <Compile Include="ECS\Components\LayerComponent.cs" />
     <Compile Include="ECS\Components\TransformComponent.cs" />
@@ -50,8 +52,10 @@
     <Compile Include="ECS\Components\VelocityComponent.cs" />
     <Compile Include="ECS\SystemRegistration.cs" />
     <Compile Include="ECS\Systems\FlipBookAnimationSystem.cs" />
+    <Compile Include="ECS\Systems\FishPopulationSystem.cs" />
     <Compile Include="ECS\Systems\SpriteRenderSystem.cs" />
     <Compile Include="ECS\Systems\System.cs" />
+    <Compile Include="ECS\TextureSource.cs" />
     <Compile Include="ECS\Types.cs" />
     <Compile Include="ECS\World.cs" />
     <Compile Include="HarpoonFishingGame.cs" />
