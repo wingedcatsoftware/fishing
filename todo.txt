@@ -5,6 +5,5 @@ Introduce SwimSystem
 Decide how to handle changing sprite sheet when fish is moving
 
 Factor out static data so it isn't copied to every entity instance (e.g. sprite sheet dimention info)
-Remove EntityId from components, maybe world too?
 Actually call system update methods in parallel
 Separate out ECS base functionality from fishing use

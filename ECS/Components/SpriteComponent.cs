@@ -6,10 +6,6 @@ namespace HarpoonFishing.Ecs.Components
 
     class SpriteComponent : Component
     {
-        public SpriteComponent(World world, EntityId id) : base(world, id)
-        {
-        }
-
         public Texture2D Texture { get; set; }
 
         public Point Size { get; set; }

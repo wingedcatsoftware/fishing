@@ -53,7 +53,7 @@ namespace HarpoonFishing
 
             // Don't create the demographics until all the assets are loaded as that will start fish spawning.
             EntityId id = EntityId.NewId();
-            var fishDemographicsComponent = new FishDemographicsComponent(_world, id);
+            var fishDemographicsComponent = new FishDemographicsComponent();
             fishDemographicsComponent.PopulationMax = 10;
             _world.AddEntity(id, new ComponentList() { fishDemographicsComponent });
         }

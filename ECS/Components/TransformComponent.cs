@@ -5,7 +5,7 @@ namespace HarpoonFishing.Ecs.Components
 
     class TransformComponent : Component
     {
-        public TransformComponent(World world, EntityId id) : base(world, id)
+        public TransformComponent()
         {
             this.Position = new Vector2(0.0f, 0.0f);
             this.Rotation = 0.0f;

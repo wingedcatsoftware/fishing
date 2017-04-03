@@ -37,20 +37,20 @@ namespace HarpoonFishing.Ecs.Systems
         private void SpawnFish()
         {
             EntityId id = EntityId.NewId();
-            var transformComponent = new TransformComponent(_world, id);
+            var transformComponent = new TransformComponent();
             transformComponent.Position = new Vector2(200.0f + (float)_random.NextDouble() * 400.0f - 200.0f, 200.0f + (float)_random.NextDouble() * 400.0f - 200.0f);
             transformComponent.Scale = new Vector2(0.25f, 0.25f);
 
-            var spriteComponent = new SpriteComponent(_world, id);
+            var spriteComponent = new SpriteComponent();
             spriteComponent.Texture = _textureSource.Lookup("green-fish-rest-to-right-sheet");
             spriteComponent.Size = new Point(256, 256);
             spriteComponent.SheetSize = new Point(1536, 256);
             spriteComponent.PositionInSheet = new Point(_random.Next(spriteComponent.SheetSize.X / spriteComponent.Size.X), 0);
 
-            var flipBookAnimationComponent = new FlipBookAnimationComponent(_world, id);
+            var flipBookAnimationComponent = new FlipBookAnimationComponent();
             flipBookAnimationComponent.AnimationFrameTime = TimeSpan.FromMilliseconds(100);
 
-            var fishDemographicDescriptionComponent = new FishDemographicDescriptionComponent(_world, id);
+            var fishDemographicDescriptionComponent = new FishDemographicDescriptionComponent();
 
             _world.AddEntity(id, new ComponentList() { transformComponent, spriteComponent, flipBookAnimationComponent, fishDemographicDescriptionComponent });
         }
