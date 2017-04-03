@@ -14,7 +14,7 @@ namespace HarpoonFishing.Ecs.Systems
             _graphics = graphics;
             _spriteBatch = spriteBatch;
 
-            _entityEnumerator = world.RegisterSystem2<TransformComponent, SpriteComponent>(this);
+            _entityEnumerator = world.RegisterSystem2<TransformComponent, SpriteComponent>(this, ComponentUse.Read, ComponentUse.Read);
         }
 
         public override void Update(GameTime gameTime)

@@ -10,8 +10,15 @@ namespace HarpoonFishing.Ecs
     using ComponentList = System.Collections.Generic.List<Components.Component>;
     using ComponentMap = System.Collections.Generic.Dictionary<EntityId, Components.Component>;
     using ComponentTypeToMap = System.Collections.Generic.Dictionary<System.Type, System.Collections.Generic.Dictionary<EntityId, Components.Component>>;
-    using SystemList = System.Collections.Generic.List<Systems.System>;
-    using SystemMap = System.Collections.Generic.Dictionary<UpdatePhase, System.Collections.Generic.List<Systems.System>>;
+    using SystemRegistrationList = System.Collections.Generic.List<SystemRegistration>;
+    using SystemMap = System.Collections.Generic.Dictionary<UpdatePhase, System.Collections.Generic.List<SystemRegistration>>;
+    
+    enum ComponentUse
+    {
+        Read,
+        Write,
+        ReadWrite
+    }
 
     partial class World
     {
@@ -23,28 +30,32 @@ namespace HarpoonFishing.Ecs
 
         // Note: Order of system registration matters.  Systems are Updated in the 
         //   order they are registered.
-        public IEnumerable<(T, U)> RegisterSystem2<T, U>(System system) where T : Component where U : Component
+        public IEnumerable<(T, U)> RegisterSystem2<T, U>(System system, ComponentUse tUse, ComponentUse uUse) where T : Component where U : Component
         {
-            SystemList phaseSystems;
+            SystemRegistration systemRegistration = new SystemRegistration();
+            systemRegistration.System = system;
+            systemRegistration.Requirements.Add((typeof(T), tUse));
+            systemRegistration.Requirements.Add((typeof(U), uUse));
 
+            SystemRegistrationList phaseSystems;
             if (!_systems.TryGetValue(system.UpdatePhase, out phaseSystems))
             {
-                phaseSystems = new SystemList();
+                phaseSystems = new SystemRegistrationList();
                 _systems.Add(system.UpdatePhase, phaseSystems);
             }
 
-            phaseSystems.Add(system);
+            phaseSystems.Add(systemRegistration);
 
             return new ComponentEnuumerator2<T, U>(this);
         }
 
         public void ProcessPhase(GameTime gameTime, UpdatePhase phase)
         {
-            if (_systems.TryGetValue(phase, out SystemList phaseSystems))
+            if (_systems.TryGetValue(phase, out SystemRegistrationList phaseSystemRegistrations))
             {
-                foreach (System system in phaseSystems)
+                foreach (SystemRegistration registration in phaseSystemRegistrations)
                 {
-                    system.Update(gameTime);
+                    registration.System.Update(gameTime);
                 }
             }
         }

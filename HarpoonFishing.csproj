@@ -46,6 +46,7 @@
     <Compile Include="ECS\Components\TransformComponent.cs" />
     <Compile Include="ECS\Components\SpriteComponent.cs" />
     <Compile Include="ECS\ComponentEnumerator.cs" />
+    <Compile Include="ECS\SystemRegistration.cs" />
     <Compile Include="ECS\Systems\SpriteRenderSystem.cs" />
     <Compile Include="ECS\Systems\System.cs" />
     <Compile Include="ECS\Types.cs" />
