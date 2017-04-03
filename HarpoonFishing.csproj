@@ -42,11 +42,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ECS\Components\Component.cs" />
+    <Compile Include="ECS\Components\FlipBookAnimationComponent.cs" />
     <Compile Include="ECS\Components\LayerComponent.cs" />
     <Compile Include="ECS\Components\TransformComponent.cs" />
     <Compile Include="ECS\Components\SpriteComponent.cs" />
     <Compile Include="ECS\ComponentEnumerator.cs" />
+    <Compile Include="ECS\Components\VelocityComponent.cs" />
     <Compile Include="ECS\SystemRegistration.cs" />
+    <Compile Include="ECS\Systems\FlipBookAnimationSystem.cs" />
     <Compile Include="ECS\Systems\SpriteRenderSystem.cs" />
     <Compile Include="ECS\Systems\System.cs" />
     <Compile Include="ECS\Types.cs" />
@@ -66,6 +69,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\green-fish-rest-to-left-sheet.png" />
+    <Content Include="Content\green-fish-rest-to-right-sheet.png" />
+    <Content Include="Content\green-fish-swim-to-left-sheet.png" />
+    <Content Include="Content\green-fish-swim-to-right-sheet.png" />
     <Content Include="Content\orange-fish.png" />
     <Content Include="Icon.ico" />
     <Content Include="todo.txt" />

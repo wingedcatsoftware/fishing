@@ -26,10 +26,15 @@ namespace HarpoonFishing.Ecs.Systems
 
             foreach ((TransformComponent transformComponent, SpriteComponent spriteComponent) in _entityEnumerator)
             {
+                Point spriteSheetPositions = new Point(spriteComponent.SheetSize.X / spriteComponent.Size.X, spriteComponent.SheetSize.Y / spriteComponent.Size.Y);
+
+                Rectangle sourceRectangle = new Rectangle(0, 0, spriteComponent.Size.X, spriteComponent.Size.Y);
+                sourceRectangle.Offset(sourceRectangle.Width * spriteComponent.PositionInSheet.X, sourceRectangle.Height * spriteComponent.PositionInSheet.Y);
+
                 _spriteBatch.Draw(
                     texture : spriteComponent.Texture, 
                     position : transformComponent.Position, 
-                    sourceRectangle : null,
+                    sourceRectangle : sourceRectangle,
                     color : Color.White,
                     rotation : transformComponent.Rotation,
                     origin : new Vector2(0.0f, 0.0f),

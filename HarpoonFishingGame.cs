@@ -1,6 +1,7 @@
 ﻿
 namespace HarpoonFishing
 {
+    using System;
     using HarpoonFishing.Ecs;
     using HarpoonFishing.Ecs.Systems;
     using Microsoft.Xna.Framework;
@@ -34,6 +35,7 @@ namespace HarpoonFishing
 
             // Systems register themselves with the world, so no need to hang on to them.
             new SpriteRenderSystem(_world, _graphics, _spriteBatch);
+            new FlipBookAnimationSystem(_world);
 
             base.Initialize();
         }
@@ -44,18 +46,27 @@ namespace HarpoonFishing
         /// </summary>
         protected override void LoadContent()
         {
-            _orangeFishTexture = Content.Load<Texture2D>("orange-fish");
+            Texture2D greenFishTexture = Content.Load<Texture2D>("green-fish-rest-to-right-sheet");
 
             // TEMP create a test entity
             EntityId id = EntityId.NewId();
             var transformComponent = new TransformComponent(_world, id);
             transformComponent.Position = new Vector2(50.0f, 50.0f);
             transformComponent.Scale = new Vector2(0.25f, 0.25f);
+
             var spriteComponent = new SpriteComponent(_world, id);
-            spriteComponent.Texture = _orangeFishTexture;
+            spriteComponent.Texture = greenFishTexture;
+            spriteComponent.Size = new Point(256, 256);
+            spriteComponent.SheetSize = new Point(1536, 256);
+            spriteComponent.PositionInSheet = new Point(1, 0);
+
+            var flipBookAnimationComponent = new FlipBookAnimationComponent(_world, id);
+            flipBookAnimationComponent.AnimationFrameTime = TimeSpan.FromMilliseconds(100);
+
             ComponentList components = new ComponentList();
             components.Add(transformComponent);
             components.Add(spriteComponent);
+            components.Add(flipBookAnimationComponent);
 
             _world.AddEntity(id, components);
         }
@@ -95,7 +106,6 @@ namespace HarpoonFishing
             base.Draw(gameTime);
         }
 
-        private Texture2D _orangeFishTexture;
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private World _world;
