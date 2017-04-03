@@ -1,8 +1,7 @@
 ﻿
-Implement ComponentEnumerator, ComponentEnumerator3, and ComponentEnumerator4
-
 Add velocity component
 Extend sprite component to allow multiple sprites
 Add flip book animation system (reads: velocity, writes: sprite component)
 
 Actually call system update methods in parallel
+Separate out ECS base functionality from fishing use
