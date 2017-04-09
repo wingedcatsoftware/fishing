@@ -6,5 +6,7 @@ namespace HarpoonFishing.Ecs.Components
         public int PopulationMax { get; set; }
 
         public int CurrentPopulation { get; set; }
+
+        public double SpawnChancePerSecond { get; set; }
     }
 }

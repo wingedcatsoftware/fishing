@@ -29,7 +29,11 @@ namespace HarpoonFishing.Ecs.Systems
 
                 if (_entityEnumerator.Count() < demographics.PopulationMax)
                 {
-                    SpawnFish();
+                    double secondsForFrame = gameTime.ElapsedGameTime.TotalSeconds;
+                    if (_random.NextDouble() <= demographics.SpawnChancePerSecond * secondsForFrame)
+                    {
+                        SpawnFish();
+                    }
                 }
             }
         }

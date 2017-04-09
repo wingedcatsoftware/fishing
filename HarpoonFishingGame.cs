@@ -55,6 +55,7 @@ namespace HarpoonFishing
             EntityId id = EntityId.NewId();
             var fishDemographicsComponent = new FishDemographicsComponent();
             fishDemographicsComponent.PopulationMax = 10;
+            fishDemographicsComponent.SpawnChancePerSecond = 0.1;
             _world.AddEntity(id, new ComponentList() { fishDemographicsComponent });
         }
 
