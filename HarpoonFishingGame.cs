@@ -1,8 +1,8 @@
 ﻿
 namespace HarpoonFishing
 {
-    using HarpoonFishing.Ecs.Components;
-    using HarpoonFishing.Ecs.Systems;
+    using HarpoonFishing.Components;
+    using HarpoonFishing.Systems;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;

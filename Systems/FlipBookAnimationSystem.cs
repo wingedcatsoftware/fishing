@@ -1,9 +1,9 @@
 ﻿
-namespace HarpoonFishing.Ecs.Systems
+namespace HarpoonFishing.Systems
 {
     using global::System;
     using global::System.Collections.Generic;
-    using HarpoonFishing.Ecs.Components;
+    using HarpoonFishing.Components;
     using Microsoft.Xna.Framework;
     using MonoGameEcs;
 

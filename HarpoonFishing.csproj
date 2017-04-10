@@ -42,16 +42,16 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="ECS\Components\FishDemographicDescriptionComponent.cs" />
-    <Compile Include="ECS\Components\FishDemographicsComponent.cs" />
-    <Compile Include="ECS\Components\FlipBookAnimationComponent.cs" />
-    <Compile Include="ECS\Components\LayerComponent.cs" />
-    <Compile Include="ECS\Components\TransformComponent.cs" />
-    <Compile Include="ECS\Components\SpriteComponent.cs" />
-    <Compile Include="ECS\Components\VelocityComponent.cs" />
-    <Compile Include="ECS\Systems\FlipBookAnimationSystem.cs" />
-    <Compile Include="ECS\Systems\FishPopulationSystem.cs" />
-    <Compile Include="ECS\Systems\SpriteRenderSystem.cs" />
+    <Compile Include="Components\FishDemographicDescriptionComponent.cs" />
+    <Compile Include="Components\FishDemographicsComponent.cs" />
+    <Compile Include="Components\FlipBookAnimationComponent.cs" />
+    <Compile Include="Components\LayerComponent.cs" />
+    <Compile Include="Components\TransformComponent.cs" />
+    <Compile Include="Components\SpriteComponent.cs" />
+    <Compile Include="Components\VelocityComponent.cs" />
+    <Compile Include="Systems\FlipBookAnimationSystem.cs" />
+    <Compile Include="Systems\FishPopulationSystem.cs" />
+    <Compile Include="Systems\SpriteRenderSystem.cs" />
     <Compile Include="HarpoonFishingGame.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

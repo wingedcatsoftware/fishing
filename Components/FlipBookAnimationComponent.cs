@@ -1,5 +1,5 @@
 ﻿
-namespace HarpoonFishing.Ecs.Components
+namespace HarpoonFishing.Components
 {
     using global::System;
     using MonoGameEcs;

@@ -1,5 +1,5 @@
 ﻿
-namespace HarpoonFishing.Ecs.Components
+namespace HarpoonFishing.Components
 {
     using Microsoft.Xna.Framework;
     using MonoGameEcs;
