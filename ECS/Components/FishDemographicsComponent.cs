@@ -1,6 +1,8 @@
 ﻿
 namespace HarpoonFishing.Ecs.Components
 {
+    using MonoGameEcs;
+
     class FishDemographicsComponent : Component
     {
         public int PopulationMax { get; set; }

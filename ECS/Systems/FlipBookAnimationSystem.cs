@@ -5,6 +5,7 @@ namespace HarpoonFishing.Ecs.Systems
     using global::System.Collections.Generic;
     using HarpoonFishing.Ecs.Components;
     using Microsoft.Xna.Framework;
+    using MonoGameEcs;
 
     class FlipBookAnimationSystem : System
     {

@@ -1,7 +1,8 @@
 ﻿
 namespace HarpoonFishing.Ecs.Components
 {
-    using System;
+    using global::System;
+    using MonoGameEcs;
 
     class FlipBookAnimationComponent : Component
     {

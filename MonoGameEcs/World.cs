@@ -1,26 +1,24 @@
 ﻿
-namespace HarpoonFishing.Ecs
+namespace MonoGameEcs
 {
-    using System;
-    using System.Collections.Generic;
-    using HarpoonFishing.Ecs.Components;
-    using HarpoonFishing.Ecs.Systems;
+    using global::System;
+    using global::System.Collections.Generic;
     using Microsoft.Xna.Framework;
 
-    using ComponentList = System.Collections.Generic.List<Components.Component>;
-    using ComponentMap = System.Collections.Generic.Dictionary<EntityId, Components.Component>;
-    using ComponentTypeToMap = System.Collections.Generic.Dictionary<System.Type, System.Collections.Generic.Dictionary<EntityId, Components.Component>>;
-    using SystemRegistrationList = System.Collections.Generic.List<SystemRegistration>;
-    using SystemMap = System.Collections.Generic.Dictionary<UpdatePhase, System.Collections.Generic.List<SystemRegistration>>;
+    using ComponentList = global::System.Collections.Generic.List<Component>;
+    using ComponentMap = global::System.Collections.Generic.Dictionary<EntityId, Component>;
+    using ComponentTypeToMap = global::System.Collections.Generic.Dictionary<global::System.Type, global::System.Collections.Generic.Dictionary<EntityId, Component>>;
+    using SystemRegistrationList = global::System.Collections.Generic.List<SystemRegistration>;
+    using SystemMap = global::System.Collections.Generic.Dictionary<UpdatePhase, global::System.Collections.Generic.List<SystemRegistration>>;
     
-    enum ComponentUse
+    public enum ComponentUse
     {
         Read,
         Write,
         ReadWrite
     }
 
-    partial class World
+    public partial class World
     {
         public World()
         {

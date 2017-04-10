@@ -6,8 +6,9 @@ namespace HarpoonFishing.Ecs.Systems
     using global::System.Linq;
     using HarpoonFishing.Ecs.Components;
     using Microsoft.Xna.Framework;
+    using MonoGameEcs;
 
-    using ComponentList = global::System.Collections.Generic.List<Ecs.Components.Component>;
+    using ComponentList = global::System.Collections.Generic.List<MonoGameEcs.Component>;
 
     class FishPopulationSystem : System
     {

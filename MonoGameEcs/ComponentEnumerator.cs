@@ -1,11 +1,10 @@
 ﻿
-namespace HarpoonFishing.Ecs
+namespace MonoGameEcs
 {
-    using System.Collections;
-    using System.Collections.Generic;
-    using HarpoonFishing.Ecs.Components;
+    using global::System.Collections;
+    using global::System.Collections.Generic;
 
-    partial class World
+    public partial class World
     {
         private class ComponentEnumerator<T> : ComponentEnumeratorBase, IEnumerable<T> where T : Component
         {

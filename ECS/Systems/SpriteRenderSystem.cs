@@ -5,6 +5,7 @@ namespace HarpoonFishing.Ecs.Systems
     using HarpoonFishing.Ecs.Components;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
+    using MonoGameEcs;
 
     class SpriteRenderSystem : System
     {

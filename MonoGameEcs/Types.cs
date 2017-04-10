@@ -1,16 +1,16 @@
 ﻿
-namespace HarpoonFishing.Ecs
+namespace MonoGameEcs
 {
-    using System;
-    using System.Threading;
+    using global::System;
+    using global::System.Threading;
 
-    enum UpdatePhase
+    public enum UpdatePhase
     {
         Main,
         Render,
     }
 
-    struct EntityId
+    public struct EntityId
     {
         public static EntityId NewId()
         {

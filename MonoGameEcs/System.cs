@@ -1,9 +1,9 @@
 ﻿
-namespace HarpoonFishing.Ecs.Systems
+namespace MonoGameEcs
 {
     using Microsoft.Xna.Framework;
 
-    class System
+    public class System
     {
         public System(UpdatePhase phase)
         {

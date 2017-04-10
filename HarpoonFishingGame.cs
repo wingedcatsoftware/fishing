@@ -1,15 +1,14 @@
 ﻿
 namespace HarpoonFishing
 {
-    using System;
-    using HarpoonFishing.Ecs;
+    using HarpoonFishing.Ecs.Components;
     using HarpoonFishing.Ecs.Systems;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
-    using HarpoonFishing.Ecs.Components;
+    using MonoGameEcs;
 
-    using ComponentList = System.Collections.Generic.List<Ecs.Components.Component>;
+    using ComponentList = System.Collections.Generic.List<MonoGameEcs.Component>;
 
     /// <summary>
     /// This is the main type for your game.

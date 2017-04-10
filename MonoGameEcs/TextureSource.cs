@@ -1,9 +1,9 @@
 ﻿
-namespace HarpoonFishing.Ecs
+namespace MonoGameEcs
 {
+    using global::System.Collections.Generic;
     using Microsoft.Xna.Framework.Content;
     using Microsoft.Xna.Framework.Graphics;
-    using System.Collections.Generic;
 
     public class TextureSource
     {

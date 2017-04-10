@@ -2,6 +2,7 @@
 namespace HarpoonFishing.Ecs.Components
 {
     using Microsoft.Xna.Framework;
+    using MonoGameEcs;
 
     class TransformComponent : Component
     {

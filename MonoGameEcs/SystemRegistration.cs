@@ -1,9 +1,8 @@
 ﻿
-namespace HarpoonFishing.Ecs
+namespace MonoGameEcs
 {
     using global::System;
-    using System.Collections.Generic;
-    using Systems;
+    using global::System.Collections.Generic;
 
     class SystemRegistration
     {
