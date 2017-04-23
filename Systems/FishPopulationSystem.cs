@@ -8,8 +8,6 @@ namespace HarpoonFishing.Systems
     using Microsoft.Xna.Framework;
     using MonoGameEcs;
 
-    using ComponentList = global::System.Collections.Generic.List<MonoGameEcs.Component>;
-
     class FishPopulationSystem : System
     {
         public FishPopulationSystem(World world, TextureSource textureSource) :
@@ -57,7 +55,7 @@ namespace HarpoonFishing.Systems
 
             var fishDemographicDescriptionComponent = new FishDemographicDescriptionComponent();
 
-            _world.AddEntity(id, new ComponentList() { transformComponent, spriteComponent, flipBookAnimationComponent, fishDemographicDescriptionComponent });
+            _world.AddEntity(id, transformComponent, spriteComponent, flipBookAnimationComponent, fishDemographicDescriptionComponent);
         }
 
         private World _world;

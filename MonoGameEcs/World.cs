@@ -2,6 +2,7 @@
 namespace MonoGameEcs
 {
     using global::System;
+    using global::System.Linq;
     using global::System.Collections.Generic;
     using Microsoft.Xna.Framework;
 
@@ -71,9 +72,9 @@ namespace MonoGameEcs
             ProcessPhase(gameTime, UpdatePhase.Render);
         }
 
-        public void AddEntity(EntityId id, ComponentList components)
+        public void AddEntity(EntityId id, params Component[] args)
         {
-            _deferredCreationQueue.Enqueue((id, components));
+            _deferredCreationQueue.Enqueue((id, args.ToList()));
         }
 
         public T GetComponent<T>(EntityId id) where T : Component

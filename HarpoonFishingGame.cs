@@ -8,8 +8,6 @@ namespace HarpoonFishing
     using Microsoft.Xna.Framework.Input;
     using MonoGameEcs;
 
-    using ComponentList = System.Collections.Generic.List<MonoGameEcs.Component>;
-
     /// <summary>
     /// This is the main type for your game.
     /// </summary>
@@ -55,7 +53,7 @@ namespace HarpoonFishing
             var fishDemographicsComponent = new FishDemographicsComponent();
             fishDemographicsComponent.PopulationMax = 10;
             fishDemographicsComponent.SpawnChancePerSecond = 0.1;
-            _world.AddEntity(id, new ComponentList() { fishDemographicsComponent });
+            _world.AddEntity(id, fishDemographicsComponent);
         }
 
         /// <summary>
