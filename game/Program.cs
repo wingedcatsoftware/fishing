@@ -2,7 +2,6 @@
 
 namespace HarpoonFishing
 {
-#if WINDOWS || LINUX
     /// <summary>
     /// The main class.
     /// </summary>
@@ -18,5 +17,4 @@ namespace HarpoonFishing
                 game.Run();
         }
     }
-#endif
 }
