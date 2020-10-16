@@ -1,8 +1,8 @@
 ﻿
-namespace HarpoonFishing.Systems
+namespace Game.Systems
 {
     using global::System.Collections.Generic;
-    using HarpoonFishing.Components;
+    using global::Game.Components;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using MonoGameEcs;
@@ -15,25 +15,24 @@ namespace HarpoonFishing.Systems
             _graphics = graphics;
             _spriteBatch = spriteBatch;
 
-            _entityEnumerator = world.RegisterSystem<TransformComponent, SpriteComponent>(this, ComponentUse.Read, ComponentUse.Read);
+            _entityEnumerator = world.RegisterDependencies<TransformComponent, SpriteDetailsComponent>(this, ComponentUse.Read, ComponentUse.Read);
         }
 
-        public override void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime, Queue<ICommand> startOfFrameQueue)
         {
             _graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // Draw the sprite.
             _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
 
-            foreach ((TransformComponent transformComponent, SpriteComponent spriteComponent) in _entityEnumerator)
+            foreach ((EntityId id, TransformComponent transformComponent, SpriteDetailsComponent spriteDetailsComponent) in _entityEnumerator)
             {
-                Point spriteSheetPositions = new Point(spriteComponent.SheetSize.X / spriteComponent.Size.X, spriteComponent.SheetSize.Y / spriteComponent.Size.Y);
+                Rectangle sourceRectangle = new Rectangle(0, 0, spriteDetailsComponent.Size.X, spriteDetailsComponent.Size.Y);
 
-                Rectangle sourceRectangle = new Rectangle(0, 0, spriteComponent.Size.X, spriteComponent.Size.Y);
-                sourceRectangle.Offset(sourceRectangle.Width * spriteComponent.PositionInSheet.X, sourceRectangle.Height * spriteComponent.PositionInSheet.Y);
+                sourceRectangle.Offset(spriteDetailsComponent.Position.X, spriteDetailsComponent.Position.Y);
 
                 _spriteBatch.Draw(
-                    texture : spriteComponent.Texture, 
+                    texture : spriteDetailsComponent.Texture, 
                     position : transformComponent.Position, 
                     sourceRectangle : sourceRectangle,
                     color : Color.White,
@@ -47,7 +46,7 @@ namespace HarpoonFishing.Systems
             _spriteBatch.End();
         }
 
-        private IEnumerable<(TransformComponent, SpriteComponent)> _entityEnumerator;
+        private IEnumerable<(EntityId, TransformComponent, SpriteDetailsComponent)> _entityEnumerator;
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
     }

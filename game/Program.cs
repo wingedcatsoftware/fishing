@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HarpoonFishing
+namespace Game
 {
     /// <summary>
     /// The main class.
@@ -13,7 +13,7 @@ namespace HarpoonFishing
         [STAThread]
         static void Main()
         {
-            using (var game = new HarpoonFishingGame())
+            using (var game = new Game())
                 game.Run();
         }
     }

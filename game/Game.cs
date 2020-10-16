@@ -1,8 +1,8 @@
 ﻿
-namespace HarpoonFishing
+namespace Game
 {
-    using HarpoonFishing.Components;
-    using HarpoonFishing.Systems;
+    using global::Game.Components;
+    using global::Game.Systems;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
@@ -11,9 +11,9 @@ namespace HarpoonFishing
     /// <summary>
     /// This is the main type for your game.
     /// </summary>
-    public class HarpoonFishingGame : Game
+    public class Game : Microsoft.Xna.Framework.Game
     {
-        public HarpoonFishingGame()
+        public Game()
         {
             _graphics = new GraphicsDeviceManager(this);
             _world = new World();
@@ -33,9 +33,9 @@ namespace HarpoonFishing
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // Systems register themselves with the world, so no need to hang on to them.
+            new SpriteDetailsLookupSystem(_world);
             new SpriteRenderSystem(_world, _graphics, _spriteBatch);
-            new FlipBookAnimationSystem(_world);
-            new FishPopulationSystem(_world, _textureSource);
+//            new FlipBookAnimationSystem(_world);
 
             base.Initialize();
         }
@@ -46,14 +46,39 @@ namespace HarpoonFishing
         /// </summary>
         protected override void LoadContent()
         {
+            _textureSource.Load("forest_pack");
             _textureSource.Load("green-fish-rest-to-right-sheet");
 
-            // Don't create the demographics until all the assets are loaded as that will start fish spawning.
-            EntityId id = EntityId.NewId();
-            var fishDemographicsComponent = new FishDemographicsComponent();
-            fishDemographicsComponent.PopulationMax = 10;
-            fishDemographicsComponent.SpawnChancePerSecond = 0.1;
-            _world.AddEntity(id, fishDemographicsComponent);
+            // Spawn some test entities
+            var id = EntityId.NewId();
+            var spriteSheetComponent = new SpriteSheetComponent()
+            {
+                Name = "terrain",
+                Texture = _textureSource.Lookup("forest_pack"),
+                Entries = new SpriteSheetEntry[]
+                {
+                    new SpriteSheetEntry {
+                        Name = "ground middle",
+                        Position = new Point(152, 144),
+                        Size = new Point(128, 128)
+                    }
+                }
+            };
+            _world.AddEntity(id, spriteSheetComponent);
+
+
+            id = EntityId.NewId();
+            var spriteComponent = new SpriteComponent()
+            {
+                SpriteSheetName = "terrain",
+                SpriteEntryName = "ground middle"
+            };
+            var transformComponent = new TransformComponent()
+            {
+                Position = new Vector2(10, 10)
+            };
+            var floorComponent = new FloorComponent();
+            _world.AddEntity(id, spriteComponent, transformComponent, floorComponent);
         }
 
         /// <summary>

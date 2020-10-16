@@ -23,45 +23,57 @@ namespace MonoGameEcs
     {
         public World()
         {
+            _startOfFrameQueue = new Queue<ICommand>();
             _deferredCreationQueue = new Queue<(EntityId, ComponentList)>();
             _systems = new SystemMap();
             _components = new ComponentTypeToMap();
         }
 
+        public void RegisterSystem(System system)
+        {
+            // Implement
+        }
+
         // Note: Order of system registration matters.  Systems are Updated in the 
         //   order they are registered.
-        public IEnumerable<T> RegisterSystem<T>(System system, ComponentUse tUse) where T : Component
+        public IEnumerable<(EntityId, T)> RegisterDependencies<T>(System system, ComponentUse tUse) where T : Component
         {
-            RegisterSystemInternal(system, (typeof(T), tUse));
+            RegisterDependenciesInternal(system, (typeof(T), tUse));
             return new ComponentEnumerator<T>(this);
         }
 
-        public IEnumerable<(T, U)> RegisterSystem<T, U>(System system, ComponentUse tUse, ComponentUse uUse) where T : Component where U : Component
+        public IEnumerable<(EntityId, T, U)> RegisterDependencies<T, U>(System system, ComponentUse tUse, ComponentUse uUse) where T : Component where U : Component
         {
-            RegisterSystemInternal(system, (typeof(T), tUse), (typeof(U), uUse));
+            RegisterDependenciesInternal(system, (typeof(T), tUse), (typeof(U), uUse));
             return new ComponentEnumerator2<T, U>(this);
         }
 
-        public IEnumerable<(T, U, V)> RegisterSystem<T, U, V>(System system, ComponentUse tUse, ComponentUse uUse, ComponentUse vUse) where T : Component where U : Component where V : Component
+        public IEnumerable<(EntityId, T, U, V)> RegisterDependencies<T, U, V>(System system, ComponentUse tUse, ComponentUse uUse, ComponentUse vUse) where T : Component where U : Component where V : Component
         {
-            RegisterSystemInternal(system, (typeof(T), tUse), (typeof(U), uUse), (typeof(V), vUse));
+            RegisterDependenciesInternal(system, (typeof(T), tUse), (typeof(U), uUse), (typeof(V), vUse));
             return new ComponentEnumerator3<T, U, V>(this);
         }
 
-        public IEnumerable<(T, U, V, W)> RegisterSystem<T, U, V, W>(System system, ComponentUse tUse, ComponentUse uUse, ComponentUse vUse, ComponentUse wUse) where T : Component where U : Component where V : Component where W : Component
+        public IEnumerable<(EntityId, T, U, V, W)> RegisterDependencies<T, U, V, W>(System system, ComponentUse tUse, ComponentUse uUse, ComponentUse vUse, ComponentUse wUse) where T : Component where U : Component where V : Component where W : Component
         {
-            RegisterSystemInternal(system, (typeof(T), tUse), (typeof(U), uUse), (typeof(V), vUse), (typeof(W), wUse));
+            RegisterDependenciesInternal(system, (typeof(T), tUse), (typeof(U), uUse), (typeof(V), vUse), (typeof(W), wUse));
             return new ComponentEnumerator4<T, U, V, W>(this);
         }
 
-        public IEnumerable<(T, U, V, W, X)> RegisterSystem<T, U, V, W, X>(System system, ComponentUse tUse, ComponentUse uUse, ComponentUse vUse, ComponentUse wUse, ComponentUse xUse) where T : Component where U : Component where V : Component where W : Component where X : Component
+        public IEnumerable<(EntityId, T, U, V, W, X)> RegisterDependencies<T, U, V, W, X>(System system, ComponentUse tUse, ComponentUse uUse, ComponentUse vUse, ComponentUse wUse, ComponentUse xUse) where T : Component where U : Component where V : Component where W : Component where X : Component
         {
-            RegisterSystemInternal(system, (typeof(T), tUse), (typeof(U), uUse), (typeof(V), vUse), (typeof(W), wUse), (typeof(X), xUse));
+            RegisterDependenciesInternal(system, (typeof(T), tUse), (typeof(U), uUse), (typeof(V), vUse), (typeof(W), wUse), (typeof(X), xUse));
             return new ComponentEnumerator5<T, U, V, W, X>(this);
         }
 
         public void Update(GameTime gameTime)
         {
+            while (_startOfFrameQueue.Count > 0)
+            {
+                var command = _startOfFrameQueue.Dequeue();
+                command.Execute(_components);
+            }
+
             AddDeferredEntities();
 
             ProcessPhase(gameTime, UpdatePhase.Main);
@@ -107,12 +119,12 @@ namespace MonoGameEcs
             {
                 foreach (SystemRegistration registration in phaseSystemRegistrations)
                 {
-                    registration.System.Update(gameTime);
+                    registration.System.Update(gameTime, _startOfFrameQueue);
                 }
             }
         }
 
-        private void RegisterSystemInternal(System system, params (Type, ComponentUse)[] args)
+        private void RegisterDependenciesInternal(System system, params (Type, ComponentUse)[] args)
         {
             SystemRegistration systemRegistration = new SystemRegistration();
             systemRegistration.System = system;
@@ -123,7 +135,18 @@ namespace MonoGameEcs
             }
 
             SystemRegistrationList phaseSystems;
-            if (!_systems.TryGetValue(system.UpdatePhase, out phaseSystems))
+            if (_systems.TryGetValue(system.UpdatePhase, out phaseSystems))
+            {
+                foreach (var existingSystemRegistration in phaseSystems)
+                {
+                    if (existingSystemRegistration.System == system)
+                    {
+                        // System is already registered.
+                        return;
+                    }
+                }
+            }
+            else
             {
                 phaseSystems = new SystemRegistrationList();
                 _systems.Add(system.UpdatePhase, phaseSystems);
@@ -154,6 +177,7 @@ namespace MonoGameEcs
             }
         }
 
+        private Queue<ICommand> _startOfFrameQueue;
         private Queue<(EntityId, ComponentList)> _deferredCreationQueue;
         private SystemMap _systems;
         private ComponentTypeToMap _components;
